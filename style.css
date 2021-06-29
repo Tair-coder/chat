@@ -1,0 +1,26 @@
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    border-radius: 33px;
+    background:  linear-gradient(to right, #dd3e54, #6be585);
+    height: 500px;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+
+}
+
+ul{
+    list-style: none;
+}
+li{
+    margin: 15px;
+}
