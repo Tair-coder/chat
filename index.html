@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Document</title>
+</head>
+<body>
+
+  <div class="content">
+  <form onsubmit="return sendMessege()" class="form">
+    <input id="message" placeholder="Написать сообщение..." autocomplete="off">
+    <input type="submit">
+  </form>
+
+
+  <ul id="messages"></ul>
+</div>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+
+<!-- include firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyAA2VTiC6fp-FTL2VDGo5Ejx4-j__IX-ZY",
+    authDomain: "my-first-chat-project-3eb72.firebaseapp.com",
+    projectId: "my-first-chat-project-3eb72",
+    storageBucket: "my-first-chat-project-3eb72.appspot.com",
+    messagingSenderId: "363953062822",
+    appId: "1:363953062822:web:0005c05fe670234a960567",
+    measurementId: "G-658QWZRK4Y"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+  const myName = prompt('Напишите свое имя')
+
+  function sendMessege() {
+    const message = document.getElementById('message').value;
+          firebase.database().ref("messages").push().set({
+              "sender":myName,
+              "message":message
+          })
+    return false;
+  }
+   firebase.database().ref("messages").on("child_added",function (snapshot) {
+     let html = "";
+
+    html +="<li id='message-" + snapshot.key +"'>";
+      if(snapshot.val().sender == myName){
+        html +="<button data-id='"+ snapshot.key + "'onclick = 'deleteMessage(this)'>"
+          html +="Delete";
+        html +="</button>"
+      }
+      html +=snapshot.val().sender + ": " + snapshot.val().message;
+      html +="</li>";
+
+        document.getElementById("messages").innerHTML += html
+})
+
+function deleteMessage(self) {
+  let messageId = self.getAttribute("data-id");
+
+  firebase.database().ref("messages").child(messageId).remove();
+}
+
+firebase.database().ref("messages").on("child_removed",function(snapshot) {
+
+
+   document.getElementById("message-" + snapshot.key).innerHTML="Это сообщение было удалено";
+ 
+});
+
+
+</script>
+</body>
+</html>
+
+
+
+
